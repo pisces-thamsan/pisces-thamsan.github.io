@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Noto Serif SC', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #1a2020;
+	color: #e6e6e6;
+}
+
+/* 侧边导航栏 */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    background-color: #2c3131;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+ul img {
+	width: 100%;
+	margin: 0;
+}
+
+li a {
+    display: block;
+    color: #e6e6e6;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+li a.active {
+    background-color: #e8f7c9;
+    color: #1a2020;
+}
+
+li a:hover:not(.active) {
+    background-color: #4a5050;
+    color: #e6e6e6;
+}
+
+/* 正文 */
+div {
+	margin-left:15%;
+	padding:1px 16px;
+}

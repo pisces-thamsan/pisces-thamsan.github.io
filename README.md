@@ -1,1 +1,0 @@
-# pisces-thamsan.github.io

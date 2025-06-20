@@ -11,6 +11,15 @@ body {
 	color: #e6e6e6;
 }
 
+a {
+	color: #e8f7c9;
+	text-decoration: underline solid; /* 默认所有链接为实线下划线 */
+}
+a:hover{
+	color:#aaddbb;
+    text-shadow: 0 0 12px rgba(170, 221, 187, 0.9); 
+}
+
 /* 侧边导航栏 */
 ul {
     list-style-type: none;

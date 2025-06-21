@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汉语文章字频分析工具&nbsp;-&nbsp;鱼窝</title>
+	  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&display=swap">
+	  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Georgia&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia','Noto Serif SC';
+        }
+        
+        body {
+            background: #1a2020;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin: 20px 0 40px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .input-section h2, .results-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-section h2 i, .results-section h2 i {
+            color: #3498db;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn-analyze {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-analyze:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+        
+        .btn-analyze:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            width: 250px;
+            font-size: 1rem;
+        }
+        
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .sort-btn {
+            background: #f1f1f1;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .sort-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .sort-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.3s;
+            position: relative;
+        }
+        
+        th:hover {
+            background: #2980b9;
+        }
+        
+        th i {
+            position: absolute;
+            right: 15px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f9ff;
+        }
+        
+        .character-cell {
+            font-size: 1.8rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .frequency-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64b5f6, #2196f3);
+            border-radius: 10px;
+            min-width: 2%;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .sort-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .character-cell {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-bar"></i> 汉语文章字频分析工具</h1>
+            <p class="subtitle">输入一篇汉语文章，自动分析每个字出现的次数和频率</p>
+			<button id="analyze-btn" class="btn-analyze">
+				<a href="tools.html">返回小工具页面</a>
+			</button>
+        </header>
+        
+        <section class="card input-section">
+            <h2><i class="fas fa-edit"></i> 输入文章</h2>
+            <textarea id="article-input" placeholder="请在此处粘贴或输入汉语文章...">汉语，又称中文、汉文，其他名称有国文、国语、华文、华语、唐文、中国语，还有唐话、中国话等俗称。汉语属于汉藏语系，是中华人民共和国及中华民国的官方语言，且为新加坡的官方语言之一，亦是联合国六种工作语言之一，主要流通于中国和新加坡、马来西亚、缅甸、泰国等东南亚国家以及美国、加拿大、澳大利亚、新西兰、日本等国的华人社区。汉语是分析语，有声调。汉语的文字系统汉字是一种意音文字，兼具表意和表音功能。汉语包含书面语以及口语两部分。古代书面汉语称为文言文，现代书面汉语一般指现代标准汉语。现代汉语方言众多，某些方言的口语之间差异较大，而书面语相对统一。</textarea>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-font"></i>
+                    <span>总字数: <span id="total-chars">0</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-search"></i>
+                    <span>不重复字数: <span id="unique-chars">0</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-star"></i>
+                    <span>最常用字: <span id="most-common">-</span></span>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button id="analyze-btn" class="btn-analyze">
+                    <i class="fas fa-calculator"></i> 分析字频
+                </button>
+            </div>
+        </section>
+        
+        <section class="card results-section" id="results-section">
+            <h2><i class="fas fa-poll"></i> 分析结果</h2>
+            
+            <div class="controls">
+                <input type="text" id="search-input" class="search-box" placeholder="搜索汉字...">
+                
+                <div class="sort-buttons">
+                    <button class="sort-btn" data-sort="char" data-order="asc">
+                        <i class="fas fa-sort-alpha-down"></i> 按汉字
+                    </button>
+                    <button class="sort-btn active" data-sort="count" data-order="desc">
+                        <i class="fas fa-sort-amount-down"></i> 按频率
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>汉字</th>
+                            <th>出现次数</th>
+                            <th>频率</th>
+                            <th>频率分布</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                        <!-- 结果将通过JS动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <p>汉语字频分析工具 &copy; 2025 | 数据仅保留在本地浏览器中 | @鱼窝</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleInput = document.getElementById('article-input');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const resultsSection = document.getElementById('results-section');
+            const resultsBody = document.getElementById('results-body');
+            const searchInput = document.getElementById('search-input');
+            const sortButtons = document.querySelectorAll('.sort-btn');
+            const totalCharsEl = document.getElementById('total-chars');
+            const uniqueCharsEl = document.getElementById('unique-chars');
+            const mostCommonEl = document.getElementById('most-common');
+            
+            let charFrequency = {};
+            let currentSort = { sort: 'count', order: 'desc' };
+            
+            // 更新统计信息
+            function updateStats() {
+                const text = articleInput.value;
+                totalCharsEl.textContent = text.length;
+                
+                // 统计不重复字数
+                const uniqueChars = new Set(text.replace(/\s/g, ''));
+                uniqueCharsEl.textContent = uniqueChars.size;
+            }
+            
+            // 初始更新统计信息
+            updateStats();
+            
+            // 监听输入变化
+            articleInput.addEventListener('input', updateStats);
+            
+            // 分析按钮点击事件
+            analyzeBtn.addEventListener('click', function() {
+                const text = articleInput.value.trim();
+                
+                if (!text) {
+                    alert('请输入文章内容');
+                    return;
+                }
+                
+                // 分析字频
+                analyzeCharacterFrequency(text);
+                
+                // 显示结果区域
+                resultsSection.style.display = 'block';
+                
+                // 滚动到结果区域
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 分析字频函数
+            function analyzeCharacterFrequency(text) {
+                // 重置统计对象
+                charFrequency = {};
+                
+                // 去除空格和标点符号（这里简单处理，实际可能需要更复杂的处理）
+                const cleanedText = text.replace(/\s+/g, '');
+                
+                // 统计每个字符出现的次数
+                for (let char of cleanedText) {
+                    if (charFrequency[char]) {
+                        charFrequency[char]++;
+                    } else {
+                        charFrequency[char] = 1;
+                    }
+                }
+                
+                // 更新最常用字
+                let mostCommonChar = '';
+                let maxCount = 0;
+                
+                for (let char in charFrequency) {
+                    if (charFrequency[char] > maxCount) {
+                        maxCount = charFrequency[char];
+                        mostCommonChar = char;
+                    }
+                }
+                
+                mostCommonEl.textContent = mostCommonChar ? `${mostCommonChar} (${maxCount}次)` : '-';
+                
+                // 渲染结果
+                renderResults();
+            }
+            
+            // 渲染结果到表格
+            function renderResults() {
+                resultsBody.innerHTML = '';
+                
+                // 获取所有字符并排序
+                let chars = Object.keys(charFrequency);
+                const totalChars = Object.values(charFrequency).reduce((sum, count) => sum + count, 0);
+                
+                // 排序
+                chars.sort((a, b) => {
+                    if (currentSort.sort === 'char') {
+                        return currentSort.order === 'asc' ? 
+                            a.localeCompare(b) : b.localeCompare(a);
+                    } else {
+                        return currentSort.order === 'desc' ? 
+                            charFrequency[b] - charFrequency[a] : 
+                            charFrequency[a] - charFrequency[b];
+                    }
+                });
+                
+                // 过滤（如果搜索框有内容）
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    chars = chars.filter(char => char.includes(searchTerm));
+                }
+                
+                // 渲染表格行
+                chars.forEach(char => {
+                    const count = charFrequency[char];
+                    const frequency = (count / totalChars * 100).toFixed(2);
+                    
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="character-cell">${char}</td>
+                        <td>${count}</td>
+                        <td>${frequency}%</td>
+                        <td>
+                            <div class="frequency-bar">
+                                <div class="bar-fill" style="width: ${frequency}%"></div>
+                            </div>
+                        </td>
+                    `;
+                    
+                    resultsBody.appendChild(row);
+                });
+            }
+            
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                renderResults();
+            });
+            
+            // 排序按钮事件
+            sortButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    sortButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 给当前按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 更新排序设置
+                    currentSort.sort = this.dataset.sort;
+                    currentSort.order = this.dataset.order;
+                    
+                    // 重新渲染结果
+                    renderResults();
+                });
+            });
+            
+            // 初始示例分析
+            setTimeout(() => {
+                analyzeBtn.click();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

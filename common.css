@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', 'Noto Serif SC', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Marcellus', 'Noto Serif SC', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -11,17 +11,54 @@ body {
 	color: #e6e6e6;
 }
 
+/* 大标题、小标题 */
+h1 {
+	background-color: #e8f7c9;
+	margin: 10px;
+	margin-top: 20px;
+	box-shadow: 0 4px 20px rgba(232, 247, 201, 0.2);
+	border-radius: 15px;
+	color: #1a2020;
+	font-family: 'Georgia','Noto Serif SC';
+	font-weight: bold;
+	padding: 0px 0px 4px 10px;
+}
+
+h2 {
+	border-bottom: 1px solid #6a7070;
+	line-height: 1.5em;
+	margin: 0.7em 10px 0.1em 10px;
+	color: #f3ae75;
+}
+
+h3 {
+	border: 1px dashed #6a7070;
+	border-radius: 10px;
+	line-height: 1.5em;
+	margin: 0.7em 10px 0.1em 10px;
+	padding: 2px 10px 1px 10px;
+	color: #e6e6e6;
+}
+
 a {
 	color: #e8f7c9;
 	text-decoration: underline solid; /* 默认所有链接为实线下划线 */
 }
-a:hover{
+
+a:hover {
 	color:#aaddbb;
     text-shadow: 0 0 12px rgba(170, 221, 187, 0.9); 
 }
 
-/* 侧边导航栏 */
-ul {
+/* 文章字体、段落间距 */
+p {
+	line-height: 1.5em;
+	margin: 10px 10px 10px 10px;
+	font-size: 16px;
+}
+
+/* 侧边固定导航栏 */
+.pisces {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -30,26 +67,27 @@ ul {
     position: fixed;
     height: 100%;
     overflow: auto;
+	font-weight: bold;
 }
 
-ul img {
+.pisces img {
 	width: 100%;
 	margin: 0;
 }
 
-li a {
+.pisces li a {
     display: block;
     color: #e6e6e6;
     padding: 8px 16px;
     text-decoration: none;
 }
 
-li a.active {
+.pisces li a.active {
     background-color: #e8f7c9;
     color: #1a2020;
 }
 
-li a:hover:not(.active) {
+.pisces a:hover:not(.active) {
     background-color: #4a5050;
     color: #e6e6e6;
 }
@@ -58,4 +96,28 @@ li a:hover:not(.active) {
 div {
 	margin-left:15%;
 	padding:1px 16px;
+}
+
+.saying {
+	padding:1px 16px;
+	font-family: 'Marcellus','Noto Serif SC';
+	font-size: 30px;
+	line-height: 0.9em;
+	color: #f3ae75;
+}
+
+/* 维基站点导览-行内元素样式 */
+.wiki-list {
+	border: 1px dashed #e6e6e6;
+	border-radius: 5px;
+	padding: 5px 15px 5px 15px;
+}
+
+.wiki-list a {
+	display: inline-block;
+	text-decoration: none;
+}
+
+.wiki-list a:hover {
+	background-color: #4a5050;
 }

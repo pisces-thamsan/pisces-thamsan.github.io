@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语字母频率分析工具&nbsp;-&nbsp;鱼窝</title>
+	  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&display=swap">
+	  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Georgia&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia','Noto Serif SC';
+        }
+        
+        body {
+            background: #1a2020;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin: 20px 0 40px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .input-section h2, .results-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-section h2 i, .results-section h2 i {
+            color: #8e44ad;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+            line-height: 1.6;
+        }
+        
+        textarea:focus {
+            border-color: #9b59b6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            background: #f0e6f5;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn-analyze {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-analyze:hover {
+            background: #8e44ad;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6);
+        }
+        
+        .btn-analyze:active {
+            transform: translateY(0);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            width: 250px;
+            font-size: 1rem;
+        }
+        
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .sort-btn {
+            background: #f1f1f1;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .sort-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .sort-btn.active {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .chart-container {
+            display: flex;
+            height: 300px;
+            margin: 30px 0;
+            gap: 20px;
+        }
+        
+        .bar-chart {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 20px 0;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #9b59b6, #8e44ad);
+            position: relative;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .letter-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .letter-card:hover {
+            transform: translateY(-5px);
+            background: #f0e6f5;
+        }
+        
+        .letter {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #9b59b6;
+            margin-bottom: 10px;
+        }
+        
+        .letter-stats {
+            font-size: 0.9rem;
+        }
+        
+        .count {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .frequency {
+            color: #7f8c8d;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .highlight {
+            background-color: #ffeaa7;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .sort-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .chart-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-pie"></i> 英语字母频率分析工具</h1>
+            <p class="subtitle">输入一篇英语文章，自动分析每个字母出现的次数和频率，并可视化展示结果</p>
+			<button id="analyze-btn" class="btn-analyze">
+				<a href="tools.html">返回小工具页面</a>
+			</button>
+        </header>
+        
+        <section class="card input-section">
+            <h2><i class="fas fa-keyboard"></i> 输入英语文章</h2>
+            <textarea id="article-input" placeholder="请在此处粘贴或输入英语文章...">The English language, a West Germanic language that originated from Anglo-Frisian dialects brought to Britain in the mid-5th to 7th centuries AD, has become the leading language of international discourse and the lingua franca in many regions. With over 1.5 billion speakers worldwide, it is either the official language or one of the official languages in almost 60 sovereign states.
+
+English has developed over more than 1,400 years and has been influenced by many other languages, including Latin, French, Dutch, and Afrikaans. The alphabet used to write English is the Latin alphabet, which consists of 26 letters. The frequency of letters in English texts varies, with the letter 'E' being the most common, accounting for about 12.7% of all letters in typical English text, followed by 'T', 'A', 'O', 'I', 'N', 'S', 'H', and 'R'.</textarea>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-font"></i>
+                    <span>总字符数: <span id="total-chars">0</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-search"></i>
+                    <span>字母数量: <span id="letter-chars">0</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-star"></i>
+                    <span>最常用字母: <span id="most-common">-</span></span>
+                </div>
+            </div>
+            
+            <div class="btn-container">
+                <button id="analyze-btn" class="btn-analyze">
+                    <i class="fas fa-calculator"></i> 分析字母频率
+                </button>
+            </div>
+        </section>
+        
+        <section class="card results-section" id="results-section">
+            <h2><i class="fas fa-poll"></i> 分析结果</h2>
+            
+            <div class="controls">
+                <input type="text" id="search-input" class="search-box" placeholder="搜索字母...">
+                
+                <div class="sort-buttons">
+                    <button class="sort-btn" data-sort="letter" data-order="asc">
+                        <i class="fas fa-sort-alpha-down"></i> 按字母
+                    </button>
+                    <button class="sort-btn active" data-sort="count" data-order="desc">
+                        <i class="fas fa-sort-amount-down"></i> 按频率
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chart-container" id="bar-chart">
+                <!-- 柱状图将通过JS动态生成 -->
+            </div>
+            
+            <div class="results-grid" id="results-grid">
+                <!-- 结果将通过JS动态生成 -->
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <p>英语字母频率分析工具 &copy; 2025 | 数据仅保留在本地浏览器中 | @鱼窝</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleInput = document.getElementById('article-input');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const resultsSection = document.getElementById('results-section');
+            const resultsGrid = document.getElementById('results-grid');
+            const barChartContainer = document.getElementById('bar-chart');
+            const searchInput = document.getElementById('search-input');
+            const sortButtons = document.querySelectorAll('.sort-btn');
+            const totalCharsEl = document.getElementById('total-chars');
+            const letterCharsEl = document.getElementById('letter-chars');
+            const mostCommonEl = document.getElementById('most-common');
+            
+            let letterFrequency = {};
+            let currentSort = { sort: 'count', order: 'desc' };
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            
+            // 更新统计信息
+            function updateStats() {
+                const text = articleInput.value;
+                totalCharsEl.textContent = text.length;
+                
+                // 统计字母数量
+                const letterCount = text.replace(/[^a-zA-Z]/g, '').length;
+                letterCharsEl.textContent = letterCount;
+            }
+            
+            // 初始更新统计信息
+            updateStats();
+            
+            // 监听输入变化
+            articleInput.addEventListener('input', updateStats);
+            
+            // 分析按钮点击事件
+            analyzeBtn.addEventListener('click', function() {
+                const text = articleInput.value.trim();
+                
+                if (!text) {
+                    alert('请输入英语文章内容');
+                    return;
+                }
+                
+                // 分析字母频率
+                analyzeLetterFrequency(text);
+                
+                // 显示结果区域
+                resultsSection.style.display = 'block';
+                
+                // 滚动到结果区域
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // 分析字母频率函数
+            function analyzeLetterFrequency(text) {
+                // 重置统计对象
+                letterFrequency = {};
+                
+                // 初始化所有字母
+                for (let char of alphabet) {
+                    letterFrequency[char] = 0;
+                }
+                
+                // 统计每个字母出现的次数
+                const cleanedText = text.toUpperCase().replace(/[^A-Z]/g, '');
+                
+                for (let char of cleanedText) {
+                    if (letterFrequency[char] >= 0) {
+                        letterFrequency[char]++;
+                    }
+                }
+                
+                // 更新最常用字母
+                let mostCommonLetter = '';
+                let maxCount = 0;
+                
+                for (let letter in letterFrequency) {
+                    if (letterFrequency[letter] > maxCount) {
+                        maxCount = letterFrequency[letter];
+                        mostCommonLetter = letter;
+                    }
+                }
+                
+                mostCommonEl.textContent = mostCommonLetter ? `${mostCommonLetter} (${maxCount}次)` : '-';
+                
+                // 渲染结果
+                renderResults();
+            }
+            
+            // 渲染结果
+            function renderResults() {
+                resultsGrid.innerHTML = '';
+                barChartContainer.innerHTML = '';
+                
+                // 获取所有字母并排序
+                let letters = Object.keys(letterFrequency);
+                const totalLetters = Object.values(letterFrequency).reduce((sum, count) => sum + count, 0);
+                
+                // 排序
+                letters.sort((a, b) => {
+                    if (currentSort.sort === 'letter') {
+                        return currentSort.order === 'asc' ? 
+                            a.localeCompare(b) : b.localeCompare(a);
+                    } else {
+                        return currentSort.order === 'desc' ? 
+                            letterFrequency[b] - letterFrequency[a] : 
+                            letterFrequency[a] - letterFrequency[b];
+                    }
+                });
+                
+                // 过滤（如果搜索框有内容）
+                const searchTerm = searchInput.value.trim().toUpperCase();
+                if (searchTerm) {
+                    letters = letters.filter(letter => letter.includes(searchTerm));
+                }
+                
+                // 创建柱状图
+                const barChart = document.createElement('div');
+                barChart.className = 'bar-chart';
+                barChartContainer.appendChild(barChart);
+                
+                // 找出最大值用于比例计算
+                const maxFrequency = Math.max(...Object.values(letterFrequency));
+                
+                // 渲染柱状图和结果卡片
+                letters.forEach(letter => {
+                    const count = letterFrequency[letter];
+                    const frequency = totalLetters > 0 ? (count / totalLetters * 100).toFixed(2) : 0;
+                    
+                    // 创建柱状图柱子
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    const barHeight = totalLetters > 0 ? (count / maxFrequency * 100) : 0;
+                    bar.style.height = `${barHeight}%`;
+                    
+                    const barValue = document.createElement('div');
+                    barValue.className = 'bar-value';
+                    barValue.textContent = `${frequency}%`;
+                    
+                    const barLabel = document.createElement('div');
+                    barLabel.className = 'bar-label';
+                    barLabel.textContent = letter;
+                    
+                    bar.appendChild(barValue);
+                    bar.appendChild(barLabel);
+                    barChart.appendChild(bar);
+                    
+                    // 创建字母卡片
+                    const card = document.createElement('div');
+                    card.className = 'letter-card';
+                    
+                    card.innerHTML = `
+                        <div class="letter">${letter}</div>
+                        <div class="letter-stats">
+                            <div class="count">出现次数: ${count}</div>
+                            <div class="frequency">频率: ${frequency}%</div>
+                        </div>
+                    `;
+                    
+                    resultsGrid.appendChild(card);
+                });
+                
+                // 添加说明
+                const info = document.createElement('div');
+                info.style.marginTop = '20px';
+                info.style.textAlign = 'center';
+                info.style.color = '#7f8c8d';
+                info.style.fontSize = '0.9rem';
+                info.innerHTML = `<p>在典型英语文本中，字母 <span class="highlight">E</span> 是最常见的（约12.7%），其次是 <span class="highlight">T, A, O, I, N, S, H, R</span></p>`;
+                barChartContainer.appendChild(info);
+            }
+            
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                renderResults();
+            });
+            
+            // 排序按钮事件
+            sortButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    sortButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 给当前按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 更新排序设置
+                    currentSort.sort = this.dataset.sort;
+                    currentSort.order = this.dataset.order;
+                    
+                    // 重新渲染结果
+                    renderResults();
+                });
+            });
+            
+            // 初始示例分析
+            setTimeout(() => {
+                analyzeBtn.click();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

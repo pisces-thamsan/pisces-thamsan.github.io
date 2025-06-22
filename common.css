@@ -50,6 +50,35 @@ a:hover {
     text-shadow: 0 0 12px rgba(170, 221, 187, 0.9); 
 }
 
+/* 雨青池——侧边导航栏样式 From Concorpus Wiki under CC-BY-SA */
+::-webkit-scrollbar {
+	width: 15px;
+	height: 15px;
+	box-shadow: 0px 0px 6px #6d7663;
+}
+
+::-webkit-scrollbar-track {
+	background: #1a2020;
+	border: none;
+}
+
+::-webkit-scrollbar-thumb/* 滑块 */ {
+	border-radius: 0px;
+	background: #4a5050;
+	border: 1px solid #4a5050;
+    background-image: -webkit-linear-gradient(
+      45deg,
+      rgba(26, 32, 32, 0.3) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(26, 32, 32, 0.3) 50%,
+      rgba(26, 32, 32, 0.3) 75%,
+      transparent 75%,
+      transparent
+  );
+	
+}
+
 /* 文章字体、段落间距 */
 p {
 	line-height: 1.5em;

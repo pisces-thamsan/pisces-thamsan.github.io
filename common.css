@@ -181,3 +181,10 @@ div {
     right: 0;
     bottom: 0;
 }
+
+/* 著作权声明 */
+.copyright {
+	font-family: 'Poppins';
+	color: #6f7575;
+	font-size: 13px;
+}

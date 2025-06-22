@@ -9,7 +9,15 @@
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:400,700&display=swap">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Marcellus&display=swap">
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Georgia&display=swap">
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Consolas&display=swap">
   <link rel="stylesheet" type="text/css" href="common.css">
+  <style>
+	  code {
+		  font-family: 'Consolas','Noto Serif SC', serif;
+		  padding:2px 16px 0px 0px;
+		  margin: 0px 0px 0px 10px;
+	  }
+  </style>
 </head>
 <body>
 
@@ -31,16 +39,17 @@
 <!--- 正文 --->
 <div>
   <h1>源码&nbsp;-&nbsp;鱼窝</h1>
-  <h3>游荡于未知星云的观测者</h3>
-  <p>Notice that this div element has a left margin of 25%. This is because the side navigation is set to 25% width. If you remove the margin, the sidenav will overlay/sit on top of this div.</p>
-  <p>Also notice that we have set overflow:auto to sidenav. This will add a scrollbar when the sidenav is too long (for example if it has over 50 links inside of it).</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
-  <p>Some text..</p>
+    <h2>随机超链接传送实现</h2>
+	  <code>
+		$(document).ready(function() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;$('.random-button').click(function() {<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var container = $(this).closest('.random-container');<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var urls = container.data('urls').split('|');<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var randomIndex = Math.floor(Math.random() * urls.length);<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;window.location.href = urls[randomIndex];<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+		&nbsp;});
+	  </code>
 </div>
 
 <script src="common.js"></script>

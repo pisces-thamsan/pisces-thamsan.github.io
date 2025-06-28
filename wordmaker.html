@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&display=swap">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Georgia&display=swap">
     <style>
-        /* 样式部分保持不变 */
         :root {
             --primary: #e8f7c9;
             --secondary: #f3ae75;
@@ -108,8 +107,35 @@
             padding: 25px;
         }
         
+        /* 移动端布局调整 */
         @media (max-width: 768px) {
             .main-content {
+                grid-template-columns: 1fr;
+                grid-template-areas: 
+                    "result-section"
+                    "config-section";
+            }
+            
+            .config-section {
+                grid-area: config-section;
+            }
+            
+            .result-section {
+                grid-area: result-section;
+            }
+            
+            /* 移动端按钮调整 */
+            .result-controls {
+                flex-wrap: wrap;
+            }
+            
+            .result-controls button {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            /* 移动端音位配置调整 */
+            .symbol-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -248,7 +274,7 @@
             border: 1px solid #e8f7c966;
             border-radius: 8px;
             padding: 20px;
-            height: 450px;
+            height: 300px;
             overflow-y: auto;
             font-family: 'Georgia';
             font-size: 18px;
@@ -308,6 +334,14 @@
             padding: 2px 5px;
             border-radius: 3px;
             font-weight: bold;
+        }
+        
+        /* 新增按钮容器 */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
     </style>
 </head>
@@ -370,10 +404,6 @@
                         <textarea id="custom1" placeholder="例如：zh,ch,sh"></textarea>
                     </div>
                 </div>
-                
-                <div class="form-group" style="margin-top: 25px;">
-                    <button id="generateBtn">生成词语</button>
-                </div>
             </div>
             
             <div class="result-section">
@@ -388,12 +418,23 @@
                 </div>
                 
                 <div class="result-controls">
+                    <button id="generateBtn">生成词语</button>
                     <button id="exportBtn">导出为TXT</button>
                     <button id="clearBtn" class="accent">清除结果</button>
                 </div>
                 
                 <div class="instructions" style="margin-top: 25px;">
                     <h3>高级选项</h3>
+                    
+                    <!-- 新增：单词生成方式选择 -->
+                    <div class="form-group">
+                        <label for="generationMethod">单词生成方式</label>
+                        <select id="generationMethod">
+                            <option value="random" selected>随机生成</option>
+                            <option value="sequential">顺序生成（由输入的音节依次生成）</option>
+                        </select>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="maxResults">最大生成数量</label>
                         <select id="maxResults">
@@ -409,9 +450,8 @@
                     
                     <div class="form-group">
                         <label for="wordSeparator">词语分隔符</label>
-                        <input type="text" id="wordSeparator" value=" " placeholder="例如：- 或 空格">
+                        <input type="text" id="wordSeparator" value="" placeholder="例如：- 或 空格">
                     </div>
-					
                 </div>
             </div>
         </div>
@@ -422,140 +462,6 @@
 		
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 添加全局变量存储生成的词语数组
-            let generatedWords = [];  // <-- 新增变量
-
-            // 获取DOM元素（原有代码保持不变）
-            const syllablePattern = document.getElementById('syllablePattern');
-            const addSyllableBtn = document.getElementById('addSyllable');
-            const removeSyllableBtn = document.getElementById('removeSyllable');
-            const generateBtn = document.getElementById('generateBtn');
-            const exportBtn = document.getElementById('exportBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const wordOutput = document.getElementById('wordOutput');
-            const wordCount = document.getElementById('wordCount');
-
-            // 添加音节
-            addSyllableBtn.addEventListener('click', function() {
-                const currentPattern = syllablePattern.value.trim();
-                if (currentPattern === '') {
-                    syllablePattern.value = 'CV';
-                } else {
-                    syllablePattern.value = currentPattern + ' CV';
-                }
-            });
-            
-            // 移除音节
-            removeSyllableBtn.addEventListener('click', function() {
-                const syllables = syllablePattern.value.trim().split(' ');
-                if (syllables.length > 1) {
-                    syllables.pop();
-                    syllablePattern.value = syllables.join(' ');
-                }
-            });
-            
-            // 生成词语
-            generateBtn.addEventListener('click', generateWords);
-            
-            // 清除结果
-            clearBtn.addEventListener('click', function() {
-                wordOutput.innerHTML = '';
-                wordCount.textContent = '0';
-                generatedWords = [];
-            });
-            
-            // 导出为TXT
-            exportBtn.addEventListener('click', function() {
-                const content = generatedWords.join('\n');
-                if (!content) {
-                    alert('请先生成一些词语！');
-                    return;
-                }
-                
-                const blob = new Blob([content], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'generated_words.txt';
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 0);
-            });
-            
-            // 生成词语函数（修改为随机生成）
-            function generateWords() {
-                const pattern = syllablePattern.value.trim();
-                if (!pattern) {
-                    alert('请输入音节结构');
-                    return;
-                }
-                
-                // 获取音位配置
-                const consonants = document.getElementById('consonants').value.split(',').map(s => s.trim()).filter(Boolean);
-                const vowels = document.getElementById('vowels').value.split(',').map(s => s.trim()).filter(Boolean);
-                const tones = document.getElementById('tones').value.split(',').map(s => s.trim()).filter(Boolean);
-                const custom1 = document.getElementById('custom1').value.split(',').map(s => s.trim()).filter(Boolean);
-                
-                // 定义音位映射
-                const phonemeMap = {
-                    'C': consonants,
-                    'V': vowels,
-                    'T': tones,
-                    'X': custom1
-                };
-                
-                // 解析音节结构
-                const syllables = pattern.split(' ').map(syll => syll.toUpperCase());
-                
-                // 验证结构
-                for (const syll of syllables) {
-                    for (const char of syll) {
-                        if (!phonemeMap[char] || phonemeMap[char].length === 0) {
-                            alert(`符号 "${char}" 没有配置备选音位`);
-                            return;
-                        }
-                    }
-                }
-                
-                // 生成指定数量的随机单词
-                const maxResults = parseInt(document.getElementById('maxResults').value);
-                const separator = document.getElementById('wordSeparator').value || ' ';
-                let words = [];
-                
-                for (let i = 0; i < maxResults; i++) {
-                    let wordParts = [];
-                    
-                    // 为每个音节生成随机组合
-                    for (const syll of syllables) {
-                        let syllableStr = '';
-                        for (const char of syll) {
-                            const phonemes = phonemeMap[char];
-                            const randomIndex = Math.floor(Math.random() * phonemes.length);
-                            syllableStr += phonemes[randomIndex];
-                        }
-                        wordParts.push(syllableStr);
-                    }
-                    
-                    words.push(wordParts.join(separator));
-                }
-                
-                // 显示结果
-                wordOutput.innerHTML = words.join('<br>');
-                wordCount.textContent = words.length;
-                
-                // 保存生成的词语数组到全局变量
-                generatedWords = words;
-            }
-            
-            // 初始生成一些词语
-            generateWords();
-        });
-    </script>
-	
+    <script src="wordmaker.js"></script>
 </body>	
 </html>

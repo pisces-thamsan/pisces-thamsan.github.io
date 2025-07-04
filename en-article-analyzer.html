@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&display=swap">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Georgia&display=swap">
-    <link rel="stylesheet" type="text/css" href="en-article-analyzer.css">
+	<link rel="stylesheet" type="text/css" href="en-article-analyzer.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1><i class="fas fa-chart-pie"></i> 英语字母频率分析工具</h1>
-            <p class="subtitle">输入一篇英语文章，自动分析每个字母出现的次数和频率，并可视化展示结果</p>
-	    <p><a href="tools.html">返回小工具页面</a></p>
+	        <p class="subtitle"><a href="tools.html">返回小工具页面</a></p>
         </header>
         
         <section class="card input-section">
@@ -63,6 +61,7 @@ English has developed over more than 1,400 years and has been influenced by many
                 </div>
             </div>
             
+			<p>在典型英语文本中，字母 <span class="highlight">E</span> 是最常见的（约12.7%），其次是 <span class="highlight">T, A, O, I, N, S, H, R</span></p>
             <div class="chart-container" id="bar-chart">
                 <!-- 柱状图将通过JS动态生成 -->
             </div>
@@ -244,7 +243,6 @@ English has developed over more than 1,400 years and has been influenced by many
                 info.style.textAlign = 'center';
                 info.style.color = '#7f8c8d';
                 info.style.fontSize = '0.9rem';
-                info.innerHTML = `<p>在典型英语文本中，字母 <span class="highlight">E</span> 是最常见的（约12.7%），其次是 <span class="highlight">T, A, O, I, N, S, H, R</span></p>`;
                 barChartContainer.appendChild(info);
             }
             

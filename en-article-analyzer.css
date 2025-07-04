@@ -7,7 +7,7 @@
 
 body {
 	background: #1a2020;
-	color: #333;
+	color: #e0e0e0;
 	min-height: 100vh;
 	padding: 20px;
 }
@@ -37,8 +37,19 @@ h1 {
 	line-height: 1.6;
 }
 
+a {
+	color: #e8f7c9;
+	text-decoration: underline solid;
+	/* 默认所有链接为实线下划线 */
+}
+
+a:hover {
+	color: #aaddbb;
+	text-shadow: 0 0 12px rgba(170, 221, 187, 0.9);
+}
+
 .card {
-	background: white;
+	background: #2c3131;
 	border-radius: 15px;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 	padding: 30px;
@@ -52,7 +63,7 @@ h1 {
 
 .input-section h2,
 .results-section h2 {
-	color: #2c3e50;
+	color: #f3ae75;
 	margin-bottom: 20px;
 	display: flex;
 	align-items: center;
@@ -61,12 +72,14 @@ h1 {
 
 .input-section h2 i,
 .results-section h2 i {
-	color: #8e44ad;
+	color: #f3ae75;
 }
 
 textarea {
+	color: #e0e0e0;
+	background-color: #1a2020;
 	width: 100%;
-	height: 200px;
+	height: 300px;
 	padding: 15px;
 	border: 2px solid #e0e0e0;
 	border-radius: 10px;
@@ -77,7 +90,7 @@ textarea {
 }
 
 textarea:focus {
-	border-color: #9b59b6;
+	border-color: #e8f7c9;
 	outline: none;
 	box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2);
 }
@@ -87,13 +100,14 @@ textarea:focus {
 	flex-wrap: wrap;
 	gap: 15px;
 	margin: 15px 0;
-	background: #f8f9fa;
+	background: #3c4141;
 	padding: 15px;
 	border-radius: 10px;
 }
 
 .stat-item {
-	background: #f0e6f5;
+	background: #5a6060;
+	color: #e0e0e0;
 	padding: 12px 20px;
 	border-radius: 8px;
 	font-weight: 500;
@@ -110,7 +124,7 @@ textarea:focus {
 }
 
 .btn-analyze {
-	background: #9b59b6;
+	background: #885139;
 	color: white;
 	border: none;
 	padding: 14px 40px;
@@ -118,16 +132,16 @@ textarea:focus {
 	border-radius: 50px;
 	cursor: pointer;
 	transition: all 0.3s ease;
-	box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+	box-shadow: 0 4px 15px rgba(136, 81, 57, 0.4);
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
 .btn-analyze:hover {
-	background: #8e44ad;
+	background: #f3ae75;
 	transform: translateY(-2px);
-	box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6);
+	box-shadow: 0 6px 20px rgba(243, 174, 117, 0.6);
 }
 
 .btn-analyze:active {
@@ -160,7 +174,8 @@ textarea:focus {
 }
 
 .sort-btn {
-	background: #f1f1f1;
+	background-color: #5a6060;
+	color: #e0e0e0;
 	border: none;
 	padding: 8px 15px;
 	border-radius: 20px;
@@ -172,12 +187,11 @@ textarea:focus {
 }
 
 .sort-btn:hover {
-	background: #e0e0e0;
+	background: #2d160c;
 }
 
 .sort-btn.active {
-	background: #9b59b6;
-	color: white;
+	background: #885139;
 }
 
 .chart-container {
@@ -193,12 +207,12 @@ textarea:focus {
 	align-items: flex-end;
 	gap: 8px;
 	padding: 20px 0;
-	border-bottom: 2px solid #eee;
+	border-bottom: 2px solid #1a2020;
 }
 
 .bar {
 	flex: 1;
-	background: linear-gradient(to top, #9b59b6, #8e44ad);
+	background: linear-gradient(to top, #f3ae75, #f39e75);
 	position: relative;
 	border-radius: 5px 5px 0 0;
 	transition: height 0.5s ease;
@@ -212,7 +226,7 @@ textarea:focus {
 	text-align: center;
 	font-size: 14px;
 	font-weight: bold;
-	color: #7f8c8d;
+	color: #8a9090;
 }
 
 .bar-value {
@@ -222,7 +236,7 @@ textarea:focus {
 	right: 0;
 	text-align: center;
 	font-size: 12px;
-	color: #2c3e50;
+	color: #e0e0e0;
 }
 
 .results-grid {
@@ -233,7 +247,7 @@ textarea:focus {
 }
 
 .letter-card {
-	background: #f8f9fa;
+	background: #3c4141;
 	border-radius: 10px;
 	padding: 15px;
 	text-align: center;
@@ -243,13 +257,13 @@ textarea:focus {
 
 .letter-card:hover {
 	transform: translateY(-5px);
-	background: #f0e6f5;
+	background: #5a6060;
 }
 
 .letter {
 	font-size: 3rem;
 	font-weight: bold;
-	color: #9b59b6;
+	color: #f3ae75;
 	margin-bottom: 10px;
 }
 
@@ -259,7 +273,7 @@ textarea:focus {
 
 .count {
 	font-weight: bold;
-	color: #2c3e50;
+	color: #e8f7c9;
 }
 
 .frequency {
@@ -275,7 +289,7 @@ textarea:focus {
 }
 
 .highlight {
-	background-color: #ffeaa7;
+	background-color: #885139;
 	padding: 2px 5px;
 	border-radius: 3px;
 	font-weight: bold;

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>莱比契注释规则排版工具</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .input-section, .output-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .input-section {
+            border-right: 1px solid #eee;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        
+        textarea {
+            min-height: 120px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .output-container {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #eaeaea;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .example {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .example h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .example-text {
+            font-family: 'Courier New', monospace;
+            background-color: white;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        
+        .instructions {
+            background-color: #fff9e6;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .key {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 表格样式 */
+        .glossing-table {
+            width: auto;
+            min-width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .glossing-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+            min-width: 60px;
+            white-space: nowrap;
+        }
+        
+        .glossing-table .original {
+            background-color: #f0f8ff;
+        }
+        
+        .glossing-table .gloss {
+            background-color: #f9f9f9;
+        }
+        
+        .translation {
+            margin-top: 15px;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        .scrollable-table {
+            overflow-x: auto;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .glossing-table {
+                font-size: 0.9rem;
+            }
+            
+            .glossing-table td {
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>莱比契注释规则排版工具</h1>
+            <p class="subtitle">将语言原文、注释和翻译自动排版为莱比契注释规则的规范格式</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2>输入数据</h2>
+                
+                <div class="form-group">
+                    <label for="original">语言原文</label>
+                    <textarea id="original" placeholder="输入语言原文，语素之间用连字符(-)连接，词之间用空格分开">Dal aronge atmosol é zomrae uni timentar</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gloss">语法注释</label>
+                    <textarea id="gloss" placeholder="输入语法注释，与原文语素一一对应，使用标准缩写">DET.NOM wing.NOM silver ACC+LINK(S.O) mirror.ACC blue brush.PFV</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="translation">翻译</label>
+                    <input type="text" id="translation" placeholder="输入完整翻译" value="银翼拂过蓝色的镜面">
+                </div>
+                
+                <button id="format-btn">生成莱比契格式</button>
+                
+                <div class="instructions">
+                    <h3>使用说明</h3>
+                    <ul>
+                        <li><strong>连字符 (-)</strong>：连接一个词内部的语素</li>
+                        <li><strong>句点 (.)</strong>：分隔一个语素中的多个语法标签</li>
+                        <li><strong>等号 (=)</strong>：标注附着语素</li>
+                        <li><strong>波浪号 (~)</strong>：标注中缀</li>
+                        <li><strong>空格</strong>：分隔不同的词</li>
+                    </ul>
+                </div>
+                
+                <div class="example">
+                    <h3>示例输入</h3>
+                    <p><strong>原文:</strong> ev-ler-imiz-den</p>
+                    <p><strong>注释:</strong> house-PL-POSS.1PL-ABL</p>
+                    <p><strong>翻译:</strong> 从我们的房子里</p>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2>莱比契格式输出</h2>
+                <div class="output-container" id="output">
+                    <!-- 输出将在这里显示 -->
+                </div>
+                
+                <div class="key">
+                    <p><strong>常用缩写:</strong> N(名词), V(动词), SG(单数), PL(复数), ACC(宾格), NOM(主格), PST(过去时), DEF(定指), ERG(作格)</p>
+                </div>
+                
+                <div class="example">
+                    <h3>莱比契规则简介</h3>
+                    <p>莱比契注释规则是一套在国际语言学领域被广泛接受的语素对语素的标注规则，用于为语言材料提供标准化、可读性高且无歧义的逐词和逐语法注解。</p>
+                    <div class="example-text">
+(1) 土耳其语
+ev-ler-imiz-den
+house-PL-POSS.1PL-ABL
+'从我们的房子里'
+
+(2) 英语
+She   ate      the    apple-s
+3SG.NOM eat.PST DEF    apple-PL
+'她吃了苹果'
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('format-btn').addEventListener('click', function() {
+            const original = document.getElementById('original').value.trim();
+            const gloss = document.getElementById('gloss').value.trim();
+            const translation = document.getElementById('translation').value.trim();
+            
+            if (!original || !gloss) {
+                alert('请填写原文和注释');
+                return;
+            }
+            
+            // 分割原文和注释为单词
+            const originalWords = original.split(/\s+/);
+            const glossWords = gloss.split(/\s+/);
+            
+            if (originalWords.length !== glossWords.length) {
+                alert('原文和注释中的单词数量不匹配');
+                return;
+            }
+            
+            // 创建表格格式的输出
+            let tableHTML = '<div class="scrollable-table">';
+            tableHTML += '<table class="glossing-table">';
+            
+            // 第一行：原文
+            tableHTML += '<tr class="original">';
+            originalWords.forEach(word => {
+                tableHTML += `<td>${word}</td>`;
+            });
+            tableHTML += '</tr>';
+            
+            // 第二行：注释
+            tableHTML += '<tr class="gloss">';
+            glossWords.forEach(word => {
+                tableHTML += `<td>${word}</td>`;
+            });
+            tableHTML += '</tr>';
+            
+            tableHTML += '</table>';
+            tableHTML += '</div>';
+            
+            // 添加翻译
+            if (translation) {
+                tableHTML += `<div class="translation">${translation}</div>`;
+            }
+            
+            document.getElementById('output').innerHTML = tableHTML;
+        });
+        
+        // 页面加载时显示示例
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('format-btn').click();
+        });
+    </script>
+</body>
+</html>
